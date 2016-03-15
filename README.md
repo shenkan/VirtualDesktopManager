@@ -21,6 +21,7 @@ I have added a listener to the hotkey of Ctrl+Alt+Right/Left. With this hotkey, 
 Limitations
 ------------------------
  * Due to not wanting to make lots of tray icons, this program only supports up to 9 virtual desktops (it will crash if you go above that).
+ * If you try switch between desktops too quickly, windows on different desktops will try to gain focus (you'll see what I mean when you try it out)
  * It needs more testing to see how well it will handle suspend/hibernation events.
  * You will need to relaunch the program if explorer.exe crashes.
  * Hotkeys are statically coded in, so if you want to configure them, you'll have to modify the source.
