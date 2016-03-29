@@ -25,6 +25,6 @@ Limitations
  * It needs more testing to see how well it will handle suspend/hibernation events.
  * You will need to relaunch the program if explorer.exe crashes.
  * Hotkeys are statically coded in, so if you want to configure them, you'll have to modify the source.
- * It doesn't handle it very well when you add or create virtual desktops while it's running. You'll need to relaunch it.
+ * <s>It doesn't handle it very well when you add or create virtual desktops while it's running. You'll need to relaunch it.</s>
 
 I'm trying to work on these issues, but if you have a solution, just throw in a PR and I'll take a look.
