@@ -18,7 +18,7 @@ namespace VirtualDesktopManager
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private IList<VirtualDesktop> desktops = VirtualDesktop.GetDesktops();
+        private IList<VirtualDesktop> desktops;
         private IntPtr[] activePrograms;
 
         private readonly HotKeyManager _rightHotkey;
@@ -28,7 +28,7 @@ namespace VirtualDesktopManager
         {
             InitializeComponent();
 
-            activePrograms = new IntPtr[desktops.Count];
+            handleChangedNumber();
 
             _rightHotkey = new HotKeyManager();
             _rightHotkey.KeyPressed += RightKeyManagerPressed;
@@ -37,6 +37,24 @@ namespace VirtualDesktopManager
             _leftHotkey.KeyPressed += LeftKeyManagerPressed;
 
             VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+            VirtualDesktop.Created += VirtualDesktop_Added;
+            VirtualDesktop.Destroyed += VirtualDesktop_Destroyed;
+        }
+
+        private void handleChangedNumber()
+        {
+            desktops = VirtualDesktop.GetDesktops();
+            activePrograms = new IntPtr[desktops.Count];
+        }
+
+        private void VirtualDesktop_Added(object sender, VirtualDesktop e)
+        {
+            handleChangedNumber();
+        }
+
+        private void VirtualDesktop_Destroyed(object sender, VirtualDesktopDestroyEventArgs e)
+        {
+            handleChangedNumber();
         }
 
         private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
