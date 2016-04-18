@@ -79,6 +79,8 @@ namespace VirtualDesktopManager
 
             var desktop = initialDesktopState();
             changeTrayIcon();
+
+            this.Visible = false;
         }
 
         private int getCurrentDesktopIndex()
