@@ -48,9 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -73,7 +71,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>mainIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\mainIco.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GlobalHotKey, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -167,10 +170,9 @@
     <None Include="Resources\9.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\mainIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="mainIcon.ico" />
+    <Content Include="Resources\mainIco.bmp" />
+    <Content Include="Resources\mainIco.ico" />
+    <None Include="Resources\mainIcoBmp.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

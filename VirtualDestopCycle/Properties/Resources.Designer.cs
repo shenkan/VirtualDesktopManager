@@ -153,9 +153,9 @@ namespace VirtualDesktopManager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon mainIcon {
+        internal static System.Drawing.Icon mainIco {
             get {
-                object obj = ResourceManager.GetObject("mainIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("mainIco", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

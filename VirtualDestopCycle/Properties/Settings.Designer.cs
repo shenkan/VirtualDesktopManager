@@ -22,5 +22,17 @@ namespace VirtualDesktopManager.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AltHotKey {
+            get {
+                return ((bool)(this["AltHotKey"]));
+            }
+            set {
+                this["AltHotKey"] = value;
+            }
+        }
     }
 }
