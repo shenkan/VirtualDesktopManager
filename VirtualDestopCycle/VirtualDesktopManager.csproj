@@ -170,9 +170,8 @@
     <None Include="Resources\9.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\mainIco.bmp" />
     <Content Include="Resources\mainIco.ico" />
-    <None Include="Resources\mainIcoBmp.ico" />
+    <None Include="Resources\mainIco.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

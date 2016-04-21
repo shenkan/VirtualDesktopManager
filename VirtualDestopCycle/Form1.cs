@@ -22,6 +22,9 @@ namespace VirtualDesktopManager
         private IList<VirtualDesktop> desktops;
         private IntPtr[] activePrograms;
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        extern static bool DestroyIcon(IntPtr handle);
+
         private readonly HotKeyManager _rightHotkey;
         private readonly HotKeyManager _leftHotkey;
 
@@ -174,44 +177,38 @@ namespace VirtualDesktopManager
             if(currentDesktopIndex == -1) 
                 currentDesktopIndex = getCurrentDesktopIndex();
 
-            //var desktopNumber = (currentDesktopIndex + 1).ToString();
+            var desktopNumber = currentDesktopIndex + 1;
+            var desktopNumberString = desktopNumber.ToString();
 
-            //Bitmap bitmap = new Bitmap(256, 258);
-            //Icon blankIcon = Properties.Resources.mainIco;
+            var fontSize = 140;
+            var xPlacement = 100;
+            var yPlacement = 50;
 
-            //System.Drawing.Font drawFont = new System.Drawing.Font("Segue UI", 16, FontStyle.Bold);
-            //System.Drawing.SolidBrush drawBrush = new System.Drawing.SolidBrush(System.Drawing.Color.White);
-            //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap);
+            if(desktopNumber > 9 && desktopNumber < 100)
+            {
+                fontSize = 125;
+                xPlacement = 75;
+                yPlacement = 65;
+            } else if(desktopNumber > 99)
+            {
+                fontSize = 80;
+                xPlacement = 90;
+                yPlacement = 100;
+            }
 
-            //graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
-            //graphics.DrawIcon(blankIcon, 0, 0);
-            //graphics.DrawString(desktopNumber, drawFont, drawBrush, 1, 2);
+            Bitmap newIcon = Properties.Resources.mainIcoPng;
+            Font desktopNumberFont = new Font("Segoe UI", fontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
-            //notifyIcon1.Icon = Icon.FromHandle(bitmap.GetHicon());
+            var gr = Graphics.FromImage(newIcon);
+            gr.DrawString(desktopNumberString, desktopNumberFont, Brushes.White, xPlacement, yPlacement);
 
-            //drawFont.Dispose();
-            //drawBrush.Dispose();
-            //graphics.Dispose();
-            //bitmap.Dispose();
+            Icon numberedIcon = Icon.FromHandle(newIcon.GetHicon());
+            notifyIcon1.Icon = numberedIcon;
 
-            if (currentDesktopIndex == 0)
-                notifyIcon1.Icon = Properties.Resources._1;
-            else if (currentDesktopIndex == 1)
-                notifyIcon1.Icon = Properties.Resources._2;
-            else if (currentDesktopIndex == 2)
-                notifyIcon1.Icon = Properties.Resources._3;
-            else if (currentDesktopIndex == 3)
-                notifyIcon1.Icon = Properties.Resources._4;
-            else if (currentDesktopIndex == 4)
-                notifyIcon1.Icon = Properties.Resources._5;
-            else if (currentDesktopIndex == 5)
-                notifyIcon1.Icon = Properties.Resources._6;
-            else if (currentDesktopIndex == 6)
-                notifyIcon1.Icon = Properties.Resources._7;
-            else if (currentDesktopIndex == 7)
-                notifyIcon1.Icon = Properties.Resources._8;
-            else if (currentDesktopIndex == 8)
-                notifyIcon1.Icon = Properties.Resources._9;
+            DestroyIcon(numberedIcon.Handle);
+            desktopNumberFont.Dispose();
+            newIcon.Dispose();
+            gr.Dispose();
         }
 
         VirtualDesktop initialDesktopState()
