@@ -135,6 +135,8 @@ namespace VirtualDesktopManager
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            labelStatus.Text = "";
+
             if (!useAltKeySettings)
                 normalHotkeys();
             else
@@ -284,6 +286,7 @@ namespace VirtualDesktopManager
             }
 
             Properties.Settings.Default.Save();
+            labelStatus.Text = "Changes were successful.";
         }
     }
 }
