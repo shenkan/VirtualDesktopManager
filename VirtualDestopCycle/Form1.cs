@@ -56,10 +56,11 @@ namespace VirtualDesktopManager
             useAltKeySettings = Properties.Settings.Default.AltHotKey;
             checkBox1.Checked = useAltKeySettings;
 
-            listBox1.Items.Clear();
+            listView1.Items.Clear();
+            listView1.Columns.Add("File");
             foreach (var file in Properties.Settings.Default.DesktopBackgroundFiles)
             {
-                listBox1.Items.Add(file);
+                listView1.Items.Add(NewListViewItem(file));
             }
         }
 
@@ -290,7 +291,72 @@ namespace VirtualDesktopManager
             openSettings();
         }
 
-       private void button1_Click(object sender, EventArgs e)
+        private void upButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    ListViewItem selected = listView1.SelectedItems[0];
+                    int indx = selected.Index;
+                    int totl = listView1.Items.Count;
+
+                    if (indx == 0)
+                    {
+                        listView1.Items.Remove(selected);
+                        listView1.Items.Insert(totl - 1, selected);
+                    }
+                    else
+                    {
+                        listView1.Items.Remove(selected);
+                        listView1.Items.Insert(indx - 1, selected);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You can only move one item at a time. Please select only one item and try again.",
+                        "Item Select", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void downButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    ListViewItem selected = listView1.SelectedItems[0];
+                    int indx = selected.Index;
+                    int totl = listView1.Items.Count;
+
+                    if (indx == totl - 1)
+                    {
+                        listView1.Items.Remove(selected);
+                        listView1.Items.Insert(0, selected);
+                    }
+                    else
+                    {
+                        listView1.Items.Remove(selected);
+                        listView1.Items.Insert(indx + 1, selected);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You can only move one item at a time. Please select only one item and try again.",
+                        "Item Select", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
         {
             _rightHotkey.Unregister(Key.Right, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
             _leftHotkey.Unregister(Key.Left, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
@@ -309,9 +375,9 @@ namespace VirtualDesktopManager
             }
 
             Properties.Settings.Default.DesktopBackgroundFiles.Clear();
-            foreach (string file in listBox1.Items)
+            foreach (ListViewItem item in listView1.Items)
             {
-                Properties.Settings.Default.DesktopBackgroundFiles.Add(file);
+                Properties.Settings.Default.DesktopBackgroundFiles.Add(item.Tag.ToString());
             }
 
             Properties.Settings.Default.Save();
@@ -329,7 +395,36 @@ namespace VirtualDesktopManager
             openFileDialog1.Title = "Select desktop background image";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                listBox1.Items.AddRange(openFileDialog1.FileNames);
+                foreach (string file in openFileDialog1.FileNames)
+                {
+                    listView1.Items.Add(NewListViewItem(file));
+                }
+            }
+        }
+
+        private static ListViewItem NewListViewItem(string file)
+        {
+            return new ListViewItem()
+            {
+                Text = Path.GetFileName(file),
+                ToolTipText = file,
+                Name = Path.GetFileName(file),
+                Tag = file
+            };
+        }
+
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    ListViewItem selected = listView1.SelectedItems[0];
+                    listView1.Items.Remove(selected);
+                }
+            }
+            catch (Exception ex)
+            {
             }
         }
     }
