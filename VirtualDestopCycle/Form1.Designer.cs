@@ -39,6 +39,9 @@
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.addFileButton = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -78,12 +81,12 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Segoe WP", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox1.ForeColor = System.Drawing.Color.White;
             this.checkBox1.Location = new System.Drawing.Point(14, 54);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(350, 26);
+            this.checkBox1.Size = new System.Drawing.Size(353, 21);
             this.checkBox1.TabIndex = 1;
             this.checkBox1.Text = "Use alternate key combination (Shift+Alt+Left/Right)";
             this.checkBox1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -94,6 +97,8 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BackColor = System.Drawing.Color.Black;
+            this.groupBox1.Controls.Add(this.listBox1);
+            this.groupBox1.Controls.Add(this.addFileButton);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -102,7 +107,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox1.Size = new System.Drawing.Size(593, 106);
+            this.groupBox1.Size = new System.Drawing.Size(593, 347);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
@@ -126,36 +131,65 @@
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.Location = new System.Drawing.Point(8, 244);
+            this.pictureBox1.Location = new System.Drawing.Point(8, 362);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(171, 194);
+            this.pictureBox1.Size = new System.Drawing.Size(171, 76);
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
             // 
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Font = new System.Drawing.Font("Segoe WP", 10F);
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.labelStatus.Location = new System.Drawing.Point(8, 123);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(0, 19);
+            this.labelStatus.Size = new System.Drawing.Size(0, 17);
             this.labelStatus.TabIndex = 5;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // addFileButton
+            // 
+            this.addFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addFileButton.BackColor = System.Drawing.Color.Black;
+            this.addFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.addFileButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.addFileButton.ForeColor = System.Drawing.Color.White;
+            this.addFileButton.Location = new System.Drawing.Point(14, 282);
+            this.addFileButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.addFileButton.Name = "addFileButton";
+            this.addFileButton.Size = new System.Drawing.Size(103, 37);
+            this.addFileButton.TabIndex = 3;
+            this.addFileButton.Text = "Add background";
+            this.addFileButton.UseVisualStyleBackColor = false;
+            this.addFileButton.Click += new System.EventHandler(this.addFileButton_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 37;
+            this.listBox1.Location = new System.Drawing.Point(14, 96);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(504, 152);
+            this.listBox1.TabIndex = 4;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(609, 451);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
-            this.Font = new System.Drawing.Font("Segoe WP", 8F);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Form1";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -184,6 +218,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button addFileButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

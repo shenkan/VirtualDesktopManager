@@ -55,6 +55,12 @@ namespace VirtualDesktopManager
 
             useAltKeySettings = Properties.Settings.Default.AltHotKey;
             checkBox1.Checked = useAltKeySettings;
+
+            listBox1.Items.Clear();
+            foreach (var file in Properties.Settings.Default.DesktopBackgroundFiles)
+            {
+                listBox1.Items.Add(file);
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -91,14 +97,23 @@ namespace VirtualDesktopManager
             // 0 == first
             int currentDesktopIndex = getCurrentDesktopIndex();
 
-            string pictureFile = Path.GetFullPath(
-                Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-                    $"Background{currentDesktopIndex}.jpg"));
-            Native.SetBackground(pictureFile);
+            string pictureFile = PickNthFile(currentDesktopIndex);
+            if (pictureFile != null)
+            {
+                Native.SetBackground(pictureFile);
+            }
 
             restoreApplicationFocus(currentDesktopIndex);
             changeTrayIcon(currentDesktopIndex);
+        }
+
+        private string PickNthFile(int currentDesktopIndex)
+        {
+            int n = Properties.Settings.Default.DesktopBackgroundFiles.Count;
+            if (n == 0)
+                return null;
+            int index = currentDesktopIndex % n;
+            return Properties.Settings.Default.DesktopBackgroundFiles[index];
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -293,8 +308,29 @@ namespace VirtualDesktopManager
                 Properties.Settings.Default.AltHotKey = false;
             }
 
+            Properties.Settings.Default.DesktopBackgroundFiles.Clear();
+            foreach (string file in listBox1.Items)
+            {
+                Properties.Settings.Default.DesktopBackgroundFiles.Add(file);
+            }
+
             Properties.Settings.Default.Save();
             labelStatus.Text = "Changes were successful.";
+        }
+
+        private void addFileButton_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.CheckPathExists = true;
+            openFileDialog1.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 0;
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.Title = "Select desktop background image";
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                listBox1.Items.AddRange(openFileDialog1.FileNames);
+            }
         }
     }
 }
