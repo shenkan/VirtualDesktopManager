@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using WindowsDesktop;
 using GlobalHotKey;
 using System.Drawing;
+using System.IO;
 
 namespace VirtualDesktopManager
 {
@@ -87,7 +88,14 @@ namespace VirtualDesktopManager
 
         private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
         {
+            // 0 == first
             int currentDesktopIndex = getCurrentDesktopIndex();
+
+            string pictureFile = Path.GetFullPath(
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                    $"Background{currentDesktopIndex}.jpg"));
+            Native.SetBackground(pictureFile);
 
             restoreApplicationFocus(currentDesktopIndex);
             changeTrayIcon(currentDesktopIndex);
