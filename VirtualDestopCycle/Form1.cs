@@ -57,7 +57,7 @@ namespace VirtualDesktopManager
             checkBox1.Checked = useAltKeySettings;
 
             listView1.Items.Clear();
-            listView1.Columns.Add("File");
+            listView1.Columns.Add("File").Width = 400;
             foreach (var file in Properties.Settings.Default.DesktopBackgroundFiles)
             {
                 listView1.Items.Add(NewListViewItem(file));
