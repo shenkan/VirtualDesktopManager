@@ -27,6 +27,7 @@ namespace VirtualDesktopManager
 
         private readonly HotKeyManager _rightHotkey;
         private readonly HotKeyManager _leftHotkey;
+        private readonly HotKeyManager _numberHotkey;
 
         private bool closeToTray;
 
@@ -46,6 +47,9 @@ namespace VirtualDesktopManager
             _leftHotkey = new HotKeyManager();
             _leftHotkey.KeyPressed += LeftKeyManagerPressed;
 
+            _numberHotkey = new HotKeyManager();
+            _numberHotkey.KeyPressed += NumberHotkeyPressed;
+
             VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             VirtualDesktop.Created += VirtualDesktop_Added;
             VirtualDesktop.Destroyed += VirtualDesktop_Destroyed;
@@ -54,6 +58,19 @@ namespace VirtualDesktopManager
 
             useAltKeySettings = Properties.Settings.Default.AltHotKey;
             checkBox1.Checked = useAltKeySettings;
+        }
+
+        private void NumberHotkeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            var desktop = initialDesktopState();
+            var index = (int) e.HotKey.Key - (int)Keys.D0;
+            var currentDesktopIndex = getCurrentDesktopIndex();
+            if (index == currentDesktopIndex)
+            {
+                return;
+            }
+                
+            desktops.ElementAt(index)?.Switch();            
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -97,6 +114,7 @@ namespace VirtualDesktopManager
         {
             _rightHotkey.Dispose();
             _leftHotkey.Dispose();
+            _numberHotkey.Dispose();
 
             closeToTray = false;
 
@@ -104,11 +122,12 @@ namespace VirtualDesktopManager
         }
 
         private void normalHotkeys()
-        {
+        {            
             try
             {
                 _rightHotkey.Register(Key.Right, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
                 _leftHotkey.Register(Key.Left, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
+                RegisterNumberHotkeys(System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
             }
             catch (Exception err)
             {
@@ -124,6 +143,7 @@ namespace VirtualDesktopManager
             {
                 _rightHotkey.Register(Key.Right, System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
                 _leftHotkey.Register(Key.Left, System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
+                RegisterNumberHotkeys(System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
             }
             catch (Exception err)
             {
@@ -131,6 +151,19 @@ namespace VirtualDesktopManager
                 notifyIcon1.BalloonTipText = "Could not set hotkeys. Please open settings and try the default combination.";
                 notifyIcon1.ShowBalloonTip(2000);
             }
+        }
+
+        private void RegisterNumberHotkeys(ModifierKeys modifiers)
+        {
+            _numberHotkey.Register(Key.D1, modifiers);
+            _numberHotkey.Register(Key.D2, modifiers);
+            _numberHotkey.Register(Key.D3, modifiers);
+            _numberHotkey.Register(Key.D4, modifiers);
+            _numberHotkey.Register(Key.D5, modifiers);
+            _numberHotkey.Register(Key.D6, modifiers);
+            _numberHotkey.Register(Key.D7, modifiers);
+            _numberHotkey.Register(Key.D8, modifiers);
+            _numberHotkey.Register(Key.D9, modifiers);
         }
 
         private void Form1_Load(object sender, EventArgs e)
