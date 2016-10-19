@@ -61,11 +61,16 @@ namespace VirtualDesktopManager
         }
 
         private void NumberHotkeyPressed(object sender, KeyPressedEventArgs e)
-        {
-            var desktop = initialDesktopState();
-            var index = (int) e.HotKey.Key - (int)Keys.D0;
+        {   
+            var index = (int) e.HotKey.Key - (int)Key.D0 - 1;
             var currentDesktopIndex = getCurrentDesktopIndex();
+
             if (index == currentDesktopIndex)
+            {
+                return;
+            }
+
+            if (index > desktops.Count - 1)
             {
                 return;
             }
