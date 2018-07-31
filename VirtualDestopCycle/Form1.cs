@@ -29,10 +29,13 @@ namespace VirtualDesktopManager
         private readonly HotKeyManager _rightHotkey;
         private readonly HotKeyManager _leftHotkey;
         private readonly HotKeyManager _numberHotkey;
-
+        private readonly HotKeyManager _moveHotkey;
+        
         private bool closeToTray;
 
         private bool useAltKeySettings;
+
+        private VDM vdm;
 
         public Form1()
         {
@@ -50,6 +53,9 @@ namespace VirtualDesktopManager
 
             _numberHotkey = new HotKeyManager();
             _numberHotkey.KeyPressed += NumberHotkeyPressed;
+
+            _moveHotkey = new HotKeyManager();
+            _moveHotkey.KeyPressed += MoveHotkeyPressed;
 
             VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             VirtualDesktop.Created += VirtualDesktop_Added;
@@ -75,7 +81,7 @@ namespace VirtualDesktopManager
 
             if (index == currentDesktopIndex)
             {
-                return;
+                return; 
             }
 
             if (index > desktops.Count - 1)
@@ -84,6 +90,26 @@ namespace VirtualDesktopManager
             }
                 
             desktops.ElementAt(index)?.Switch();            
+        }
+
+        private void MoveHotkeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            IntPtr hWnd = GetForegroundWindow();
+
+            var index = (int)e.HotKey.Key - (int)Key.D0 - 1;
+            var currentDesktopIndex = getCurrentDesktopIndex();
+
+            if (index == currentDesktopIndex)
+            {
+                return;
+            }
+
+            if (index > desktops.Count - 1)
+            {
+                return;
+            }
+
+            vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -157,6 +183,7 @@ namespace VirtualDesktopManager
                 _rightHotkey.Register(Key.Right, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
                 _leftHotkey.Register(Key.Left, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
                 RegisterNumberHotkeys(System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt);
+                RegisterMoveHotkeys(System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
             }
             catch (Exception err)
             {
@@ -166,13 +193,14 @@ namespace VirtualDesktopManager
             }
         }
 
-        private void alternateHotkeys()
+        private void alternateHotkeys() 
         {
             try
             {
                 _rightHotkey.Register(Key.Right, System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
                 _leftHotkey.Register(Key.Left, System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
                 RegisterNumberHotkeys(System.Windows.Input.ModifierKeys.Shift | System.Windows.Input.ModifierKeys.Alt);
+                RegisterMoveHotkeys(System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
             }
             catch (Exception err)
             {
@@ -195,6 +223,19 @@ namespace VirtualDesktopManager
             _numberHotkey.Register(Key.D9, modifiers);
         }
 
+        private void RegisterMoveHotkeys(ModifierKeys modifiers)
+        {
+            _moveHotkey.Register(Key.D1, modifiers);
+            _moveHotkey.Register(Key.D2, modifiers);
+            _moveHotkey.Register(Key.D3, modifiers);
+            _moveHotkey.Register(Key.D4, modifiers);
+            _moveHotkey.Register(Key.D5, modifiers);
+            _moveHotkey.Register(Key.D6, modifiers);
+            _moveHotkey.Register(Key.D7, modifiers);
+            _moveHotkey.Register(Key.D8, modifiers);
+            _moveHotkey.Register(Key.D9, modifiers);
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             labelStatus.Text = "";
@@ -208,6 +249,8 @@ namespace VirtualDesktopManager
             changeTrayIcon();
 
             this.Visible = false;
+
+            vdm = new VDM();
         }
 
         private int getCurrentDesktopIndex()
@@ -463,6 +506,81 @@ namespace VirtualDesktopManager
             }
             catch (Exception ex)
             {
+            }
+        }
+    }
+
+    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("a5cd92ff-29be-454c-8d04-d82879fb3f1b")]
+    [System.Security.SuppressUnmanagedCodeSecurity]
+    public interface IVirtualDesktopManager
+    {
+        [PreserveSig]
+        int IsWindowOnCurrentVirtualDesktop(
+            [In] IntPtr TopLevelWindow,
+            [Out] out int OnCurrentDesktop
+            );
+        [PreserveSig]
+        int GetWindowDesktopId(
+            [In] IntPtr TopLevelWindow,
+            [Out] out Guid CurrentDesktop
+            );
+
+        [PreserveSig]
+        int MoveWindowToDesktop(
+            [In] IntPtr TopLevelWindow,
+            [MarshalAs(UnmanagedType.LPStruct)]
+            [In]Guid CurrentDesktop
+            );
+    }
+
+    [ComImport, Guid("aa509086-5ca9-4c25-8f95-589d3c07b48a")]
+    public class CVirtualDesktopManager
+    {
+
+    }
+    public class VDM
+    {
+        public VDM()
+        {
+            cmanager = new CVirtualDesktopManager();
+            manager = (IVirtualDesktopManager)cmanager;
+        }
+        ~VDM()
+        {
+            manager = null;
+            cmanager = null;
+        }
+        private CVirtualDesktopManager cmanager = null;
+        private IVirtualDesktopManager manager;
+
+        public bool IsWindowOnCurrentVirtualDesktop(IntPtr TopLevelWindow)
+        {
+            int result;
+            int hr;
+            if ((hr = manager.IsWindowOnCurrentVirtualDesktop(TopLevelWindow, out result)) != 0)
+            {
+                Marshal.ThrowExceptionForHR(hr);
+            }
+            return result != 0;
+        }
+
+        public Guid GetWindowDesktopId(IntPtr TopLevelWindow)
+        {
+            Guid result;
+            int hr;
+            if ((hr = manager.GetWindowDesktopId(TopLevelWindow, out result)) != 0)
+            {
+                Marshal.ThrowExceptionForHR(hr);
+            }
+            return result;
+        }
+
+        public void MoveWindowToDesktop(IntPtr Window, Guid Desktop)
+        {
+            int hr;
+            if ((hr = manager.MoveWindowToDesktop(Window, Desktop)) != 0)
+            {
+                Marshal.ThrowExceptionForHR(hr);
             }
         }
     }
