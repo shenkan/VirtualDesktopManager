@@ -110,6 +110,7 @@ namespace VirtualDesktopManager
             }
 
             vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
+            saveApplicationFocus(currentDesktopIndex);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
