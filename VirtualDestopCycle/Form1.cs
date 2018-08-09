@@ -30,6 +30,8 @@ namespace VirtualDesktopManager
         private readonly HotKeyManager _leftHotkey;
         private readonly HotKeyManager _numberHotkey;
         private readonly HotKeyManager _moveHotkey;
+        private readonly HotKeyManager _rightMoveHotkey;
+        private readonly HotKeyManager _leftMoveHotkey;
         
         private bool closeToTray;
 
@@ -56,6 +58,12 @@ namespace VirtualDesktopManager
 
             _moveHotkey = new HotKeyManager();
             _moveHotkey.KeyPressed += MoveHotkeyPressed;
+
+            _rightMoveHotkey = new HotKeyManager();
+            _rightMoveHotkey.KeyPressed += RightMoveKeyPressed;
+
+            _leftMoveHotkey = new HotKeyManager();
+            _leftMoveHotkey.KeyPressed += LeftMoveKeyPressed;
 
             VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             VirtualDesktop.Created += VirtualDesktop_Added;
@@ -112,6 +120,53 @@ namespace VirtualDesktopManager
             vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
             saveApplicationFocus(currentDesktopIndex);
         }
+
+        private void RightMoveHotkeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            IntPtr hWnd = GetForegroundWindow();
+
+            var index = getCurrentDesktopIndex();
+
+            if (desktops.Count == 1)
+            {
+                return;
+            }
+
+            if (index + 1 == desktops.Count)
+            {
+                vdm.MoveWindowToDesktop(hWnd, desktops[0].Id);
+            }
+            else
+            {
+                vdm.MoveWindowToDesktop(hWnd, desktops[index + 1].Id);
+            }
+
+            saveApplicationFocus(index);
+        }
+
+        private void LeftMoveHotkeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            IntPtr hWnd = GetForegroundWindow();
+
+            var index = getCurrentDesktopIndex();
+
+            if (desktops.Count == 1)
+            {
+                return;
+            }
+
+            if (index == 0)
+            {
+                vdm.MoveWindowToDesktop(hWnd, desktops[desktops.Count - 1].Id);
+            }
+            else
+            {
+                vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
+            }
+
+            saveApplicationFocus(index);
+        }
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -235,6 +290,9 @@ namespace VirtualDesktopManager
             _moveHotkey.Register(Key.D7, modifiers);
             _moveHotkey.Register(Key.D8, modifiers);
             _moveHotkey.Register(Key.D9, modifiers);
+
+            _rightMoveHotkey.Register(Key.Right, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
+            _leftMoveHotkey.Register(Key.Left, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift);
         }
 
         private void Form1_Load(object sender, EventArgs e)
