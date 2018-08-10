@@ -118,6 +118,7 @@ namespace VirtualDesktopManager
             }
 
             vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
+            setApplicationFocus(hWnd, index);
             saveApplicationFocus(currentDesktopIndex);
         }
 
@@ -135,10 +136,12 @@ namespace VirtualDesktopManager
             if (index + 1 == desktops.Count)
             {
                 vdm.MoveWindowToDesktop(hWnd, desktops[0].Id);
+                setApplicationFocus(hWnd, 0);
             }
             else
             {
                 vdm.MoveWindowToDesktop(hWnd, desktops[index + 1].Id);
+                setApplicationFocus(hWnd, index + 1);
             }
 
             saveApplicationFocus(index);
@@ -158,10 +161,12 @@ namespace VirtualDesktopManager
             if (index == 0)
             {
                 vdm.MoveWindowToDesktop(hWnd, desktops[desktops.Count - 1].Id);
+                setApplicationFocus(hWnd, desktops.Count - 1);
             }
             else
             {
                 vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
+                setApplicationFocus(hWnd, index + 1);
             }
 
             saveApplicationFocus(index);
@@ -315,6 +320,14 @@ namespace VirtualDesktopManager
         private int getCurrentDesktopIndex()
         {
             return desktops.IndexOf(VirtualDesktop.Current);
+        }
+
+        private void setApplicationFocus(IntPtr appWindow, int targetDesktopIndex)
+        {
+            if (currentDesktopIndex == -1)
+                currentDesktopIndex = getCurrentDesktopIndex();
+
+            activePrograms[targetDesktopIndex] = appWindow;
         }
 
         private void saveApplicationFocus(int currentDesktopIndex = -1)
