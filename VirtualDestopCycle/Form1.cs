@@ -153,6 +153,8 @@ namespace VirtualDesktopManager
 
             var index = getCurrentDesktopIndex();
 
+            int targetDesktopIndex;
+
             if (desktops.Count == 1)
             {
                 return;
@@ -160,15 +162,15 @@ namespace VirtualDesktopManager
 
             if (index == 0)
             {
-                vdm.MoveWindowToDesktop(hWnd, desktops[desktops.Count - 1].Id);
-                setApplicationFocus(hWnd, desktops.Count - 1);
+                targetDesktopIndex = desktops.Count -  1;
             }
             else
             {
-                vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
-                setApplicationFocus(hWnd, index + 1);
+                targetDesktopIndex = index - 1;
             }
 
+            vdm.MoveWindowToDesktop(hWnd, desktops[targetDesktopIndex].Id);
+            setApplicationFocus(hWnd, targetDesktopIndex);
             saveApplicationFocus(index);
         }
 
