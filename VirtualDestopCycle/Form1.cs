@@ -117,7 +117,7 @@ namespace VirtualDesktopManager
                 return;
             }
 
-            vdm.MoveWindowToDesktop(hWnd, desktops[index - 1].Id);
+            vdm.MoveWindowToDesktop(hWnd, desktops[index].Id);
             setApplicationFocus(hWnd, index);
             saveApplicationFocus(currentDesktopIndex);
         }
